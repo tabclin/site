@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora de preço: margem, contribuição e markup · TabClin</title>
+<meta name="description" content="Calcule de graça o preço de venda, a margem de contribuição, a margem de lucro e o markup do seu produto — com explicação em português simples.">
+<link rel="icon" href="../../assets/img/logo-icone.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#07142a; --navy2:#0d2142; --tinta:#0b1b33; --acento:#5fd6e4; --ciano:#22c3d4; --azul:#2557c9; --amarelo:#ffd166; --mudo:#5b6b80; --borda:#dfe6ee; --fundo:#f3f6fa; --wpp:#25d366;
+          --grad:linear-gradient(135deg,#22c3d4 0%,#2557c9 100%); --verde:#16a34a; --verm:#dc3a1f; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  [hidden] { display:none !important; }
+  body { font-family:"Figtree",system-ui,sans-serif; background:var(--fundo); color:var(--tinta); -webkit-font-smoothing:antialiased; }
+  .topo { background:var(--navy); color:#fff; padding:20px 16px 64px; background-image:radial-gradient(120% 80% at 80% -10%, #1d4f8f 0%, transparent 60%); }
+  .topo .marca { display:flex; align-items:center; gap:10px; max-width:640px; margin:0 auto; color:#fff; text-decoration:none; font-weight:800; font-size:18px; }
+  .topo .marca img { width:34px; height:34px; border-radius:9px; }
+  .topo .marca span { color:var(--acento); font-weight:700; }
+  .topo h1 { max-width:640px; margin:26px auto 8px; font-size:clamp(30px,8vw,44px); font-weight:900; letter-spacing:-1px; line-height:1.05; }
+  .topo p { max-width:640px; margin:0 auto; color:#cfe3f2; font-size:17px; font-weight:500; }
+  main { max-width:640px; margin:-44px auto 0; padding:0 16px 40px; }
+  .card { background:#fff; border-radius:22px; padding:20px 18px; box-shadow:0 20px 50px -30px rgba(7,20,42,.45); border:1px solid var(--borda); }
+  .abas { display:grid; grid-template-columns:1fr 1fr; gap:6px; background:var(--fundo); padding:5px; border-radius:14px; margin-bottom:18px; }
+  .abas button { border:0; background:transparent; padding:11px 6px; border-radius:10px; font:inherit; font-weight:800; font-size:15px; color:var(--mudo); cursor:pointer; }
+  .abas button[aria-selected="true"] { background:#fff; color:var(--tinta); box-shadow:0 4px 12px -6px rgba(7,20,42,.35); }
+  .campo { margin-bottom:14px; }
+  .campo label { display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-weight:800; font-size:15px; margin-bottom:6px; }
+  .campo label small { font-weight:600; color:var(--mudo); font-size:13px; }
+  .entrada { display:flex; align-items:center; border:2px solid var(--borda); border-radius:12px; background:#fff; overflow:hidden; }
+  .entrada:focus-within { border-color:var(--ciano); }
+  .entrada b { padding:0 10px 0 12px; color:var(--mudo); font-weight:800; }
+  .entrada input { flex:1; min-width:0; border:0; outline:0; font:inherit; font-size:18px; font-weight:700; padding:12px 12px 12px 0; color:var(--tinta); background:transparent; }
+  .ajuda { border:0; background:none; color:var(--azul); font:inherit; font-weight:700; font-size:14px; cursor:pointer; padding:6px 0 0; }
+  .sub { display:none; grid-template-columns:1fr 1fr; gap:10px; background:var(--fundo); border-radius:12px; padding:12px; margin-top:8px; }
+  .sub.aberto { display:grid; }
+  .sub .campo { margin:0; }
+  .sub .campo label { font-size:13px; }
+  .sub .entrada input { font-size:16px; padding:9px 10px 9px 0; }
+  .sub p { grid-column:1 / -1; font-size:13px; color:var(--mudo); font-weight:600; }
+  .erro { color:var(--verm); font-size:13px; font-weight:700; min-height:0; margin-top:4px; }
+  .botoes { display:flex; gap:10px; margin-top:6px; flex-wrap:wrap; }
+  .btn { border:0; border-radius:14px; padding:15px 20px; font:inherit; font-weight:900; font-size:17px; cursor:pointer; }
+  .btn.prim { flex:1; background:var(--grad); color:#fff; }
+  .btn.sec { background:var(--fundo); color:var(--tinta); font-size:15px; }
+  .painel[hidden] { display:none; }
+  #resultado { margin-top:16px; }
+  #resultado[hidden] { display:none; }
+  .rotulo { font-size:13px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--mudo); margin-bottom:10px; }
+  #barra { display:flex; height:34px; border-radius:10px; overflow:hidden; background:var(--fundo); }
+  #barra div { height:100%; min-width:0; transition:width .5s; }
+  [data-parte=produto] { background:#94a3b8; } [data-parte=variaveis] { background:var(--amarelo); } [data-parte=estrutura] { background:var(--azul); } [data-parte=lucro] { background:var(--verde); }
+  #barra.preju [data-parte=lucro] { background:var(--verm); }
+  .legenda { display:grid; grid-template-columns:1fr; gap:6px; margin-top:10px; font-size:14px; font-weight:700; }
+  @media (min-width:520px) { .legenda { grid-template-columns:1fr 1fr; column-gap:20px; } }
+  .legenda span { display:flex; align-items:center; gap:7px; min-width:0; }
+  .legenda i { width:12px; height:12px; border-radius:4px; flex:none; }
+  .legenda em { font-style:normal; color:var(--mudo); margin-left:auto; white-space:nowrap; }
+  .numeros { display:grid; gap:10px; margin-top:18px; }
+  .num { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:12px 14px; border-radius:14px; background:var(--fundo); }
+  .num div:first-child { font-weight:800; font-size:15px; }
+  .num div:first-child small { display:block; color:var(--mudo); font-weight:600; font-size:12.5px; }
+  .num .v { text-align:right; font-weight:900; font-size:22px; white-space:nowrap; }
+  .num .v small { display:block; font-size:13px; color:var(--mudo); font-weight:700; }
+  .num.destaque { background:var(--navy); color:#fff; }
+  .num.destaque small { color:#9fb3c8 !important; }
+  #explicacoes { display:grid; gap:8px; margin-top:16px; }
+  .msg { padding:12px 14px; border-radius:14px; font-weight:600; font-size:15px; line-height:1.35; border-left:5px solid; }
+  .msg.ok { background:#e9f9f0; border-color:var(--verde); }
+  .msg.alerta { background:#fff6dc; border-color:#e0a800; }
+  .msg.perigo { background:#ffece8; border-color:var(--verm); }
+  #aviso100 { margin-top:16px; padding:14px; border-radius:16px; background:var(--navy); color:#fff; font-weight:700; font-size:15px; line-height:1.35; }
+  #aviso100 b { color:var(--amarelo); }
+  .proximo, .convite { margin-top:16px; }
+  .proximo a { display:flex; align-items:center; justify-content:space-between; gap:10px; text-decoration:none; color:var(--tinta); }
+  .proximo strong { display:block; font-size:17px; font-weight:900; }
+  .proximo span.tag { font-size:12px; font-weight:800; background:var(--fundo); color:var(--mudo); padding:5px 10px; border-radius:999px; white-space:nowrap; }
+  .convite h2 { font-size:20px; font-weight:900; letter-spacing:-.3px; }
+  .convite p { color:var(--mudo); font-weight:600; margin:6px 0 12px; }
+  .convite .botoes a { flex:1; text-align:center; text-decoration:none; }
+  .wpp { background:var(--wpp); color:#fff; }
+  .ig { background:var(--fundo); color:var(--tinta); }
+  footer { text-align:center; color:var(--mudo); font-size:13px; font-weight:600; padding:10px 16px 30px; }
+  footer a { color:var(--azul); }
+</style>
+</head>
+<body>
+<header class="topo">
+  <a class="marca" href="../../"><img src="../../assets/img/logo-icone.png" alt="">tabclin <span>· Ferramentas</span></a>
+  <h1>Calculadora de preço</h1>
+  <p>Margem, margem de contribuição e markup — sem confusão.</p>
+</header>
+
+<main>
+  <section class="card">
+    <div class="abas" role="tablist">
+      <button id="abaAnalisar" role="tab" aria-selected="true">Analisar meu preço</button>
+      <button id="abaCalcular" role="tab" aria-selected="false">Calcular meu preço</button>
+    </div>
+
+    <form id="fAnalisar" class="painel" novalidate>
+      <div class="campo"><label for="preco">Preço de venda <small>por unidade</small></label>
+        <div class="entrada"><b>R$</b><input id="preco" inputmode="decimal" autocomplete="off" placeholder="0,00"></div><div class="erro" id="ePreco"></div></div>
+      <div class="campo"><label for="custo">Custo do produto <small>matéria-prima, embalagem…</small></label>
+        <div class="entrada"><b>R$</b><input id="custo" inputmode="decimal" autocomplete="off" placeholder="0,00"></div><div class="erro" id="eCusto"></div></div>
+      <div class="campo"><label for="variaveis">Custos variáveis da venda <small>% do preço</small></label>
+        <div class="entrada"><b>%</b><input id="variaveis" inputmode="decimal" autocomplete="off" placeholder="0"></div>
+        <button type="button" class="ajuda" id="detalhar">▸ detalhar (imposto, cartão, comissão…)</button>
+        <div class="sub" id="subVar">
+          <div class="campo"><label for="imposto">Imposto %</label><div class="entrada"><input id="imposto" inputmode="decimal"></div></div>
+          <div class="campo"><label for="cartao">Taxa do cartão %</label><div class="entrada"><input id="cartao" inputmode="decimal"></div></div>
+          <div class="campo"><label for="comissao">Comissão %</label><div class="entrada"><input id="comissao" inputmode="decimal"></div></div>
+          <div class="campo"><label for="outros">Outros %</label><div class="entrada"><input id="outros" inputmode="decimal"></div></div>
+          <p>A soma vai direto para o campo de custos variáveis.</p>
+        </div></div>
+      <div class="campo"><label for="fixas">Despesas fixas <small>% do faturamento</small></label>
+        <div class="entrada"><b>%</b><input id="fixas" inputmode="decimal" autocomplete="off" placeholder="0"></div>
+        <button type="button" class="ajuda" id="naoSei">▸ não sei esse número</button>
+        <div class="sub" id="subFixas">
+          <div class="campo"><label for="despMes">Despesas fixas do mês R$</label><div class="entrada"><input id="despMes" inputmode="decimal" placeholder="aluguel, salários…"></div></div>
+          <div class="campo"><label for="fatMes">Faturamento do mês R$</label><div class="entrada"><input id="fatMes" inputmode="decimal"></div></div>
+          <p>Despesas fixas ÷ faturamento. Ex.: R$ 15.000 ÷ R$ 50.000 = 30%.</p>
+        </div>
+        <div class="erro" id="ePct"></div></div>
+      <div class="botoes"><button type="submit" class="btn prim" id="calcular">Calcular</button><button type="button" class="btn sec" id="exemplo">Carregar exemplo</button></div>
+    </form>
+
+    <form id="fCalcular" class="painel" novalidate hidden>
+      <div class="campo"><label for="cCusto">Custo do produto <small>por unidade</small></label>
+        <div class="entrada"><b>R$</b><input id="cCusto" inputmode="decimal" autocomplete="off" placeholder="0,00"></div><div class="erro" id="ecCusto"></div></div>
+      <div class="campo"><label for="cVariaveis">Custos variáveis da venda <small>% do preço</small></label>
+        <div class="entrada"><b>%</b><input id="cVariaveis" inputmode="decimal" autocomplete="off" placeholder="0"></div></div>
+      <div class="campo"><label for="cFixas">Despesas fixas <small>% do faturamento</small></label>
+        <div class="entrada"><b>%</b><input id="cFixas" inputmode="decimal" autocomplete="off" placeholder="0"></div></div>
+      <div class="campo"><label for="cLucro">Lucro que você quer <small>% do preço</small></label>
+        <div class="entrada"><b>%</b><input id="cLucro" inputmode="decimal" autocomplete="off" placeholder="0"></div><div class="erro" id="ecPct"></div></div>
+      <div class="botoes"><button type="submit" class="btn prim" id="cCalcular">Calcular preço</button><button type="button" class="btn sec" id="cExemplo">Carregar exemplo</button></div>
+    </form>
+
+    <div id="resultado" hidden>
+      <div id="blocoBarra">
+        <div class="rotulo">De cada R$ 100 vendidos</div>
+        <div id="barra"><div data-parte="produto"></div><div data-parte="variaveis"></div><div data-parte="estrutura"></div><div data-parte="lucro"></div></div>
+        <div class="legenda" id="legenda"></div>
+      </div>
+      <div class="numeros">
+        <div class="num" id="linhaPreco" hidden><div>Preço sugerido<small>por unidade</small></div><div class="v" id="precoSug"></div></div>
+        <div class="num"><div>Markup<small>quanto foi somado sobre o custo</small></div><div class="v" id="markup"></div></div>
+        <div class="num"><div>Margem de contribuição<small>o que sobra para pagar a estrutura</small></div><div class="v" id="contrib"></div></div>
+        <div class="num destaque"><div>Margem de lucro<small>o que sobra de verdade</small></div><div class="v" id="lucro"></div></div>
+      </div>
+      <div id="explicacoes"></div>
+    </div>
+
+    <div id="aviso100">⚠️ <b>Margem nunca passa de 100%.</b> Se alguém te disse 188% de margem, era markup.</div>
+  </section>
+
+  <section class="card proximo">
+    <a href="#" aria-disabled="true" onclick="return false"><div><div class="rotulo" style="margin:0 0 4px">Próximo passo</div><strong>Seu custo está certo? → Ficha técnica</strong></div><span class="tag">em breve</span></a>
+  </section>
+
+  <section class="card convite">
+    <h2>Quer isso para todos os seus produtos?</h2>
+    <p>A TabClin monta a ficha técnica, o preço e a margem de cada produto da sua empresa.</p>
+    <div class="botoes">
+      <a class="btn wpp" href="https://wa.me/5517997413788?text=Ol%C3%A1%2C%20usei%20a%20calculadora%20de%20pre%C3%A7o%20da%20TabClin%20e%20quero%20saber%20mais." target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn ig" href="https://instagram.com/tabclin.consultoria/" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </section>
+</main>
+<footer>Exemplo ilustrativo · nada é salvo: atualizou, zerou · <a href="../../">tabclin.com</a></footer>
+<script type="module" src="app.js"></script>
+</body>
+</html>
