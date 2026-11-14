@@ -17,7 +17,7 @@ $("abaAnalisar").onclick = () => abrir("analisar")
 $("abaCalcular").onclick = () => abrir("calcular")
 
 // ajudas
-const alterna = (botao, caixa, txt) => { $(botao).onclick = () => { const a = $(caixa).classList.toggle("aberto"); $(botao).textContent = (a ? "▾ " : "▸ ") + txt } }
+const alterna = (botao, caixa, txt) => { $(botao).onclick = () => { const a = $(caixa).classList.toggle("aberto"); $(botao).setAttribute("aria-expanded", a); $(botao).textContent = (a ? "▾ " : "▸ ") + txt } }
 alterna("detalhar", "subVar", "detalhar (imposto, cartão, comissão…)")
 alterna("naoSei", "subFixas", "não sei esse número")
 for (const id of ["imposto", "cartao", "comissao", "outros"])

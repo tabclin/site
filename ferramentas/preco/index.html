@@ -108,12 +108,12 @@
 
     <form id="fAnalisar" class="painel" novalidate>
       <div class="campo"><label for="preco">Preço de venda <small>por unidade</small></label>
-        <div class="entrada"><b>R$</b><input id="preco" inputmode="decimal" autocomplete="off" placeholder="0,00"></div><div class="erro" id="ePreco"></div></div>
+        <div class="entrada"><b>R$</b><input id="preco" inputmode="decimal" autocomplete="off" placeholder="0,00"></div><div class="erro" aria-live="polite" id="ePreco"></div></div>
       <div class="campo"><label for="custo">Custo do produto <small>matéria-prima, embalagem…</small></label>
-        <div class="entrada"><b>R$</b><input id="custo" inputmode="decimal" autocomplete="off" placeholder="0,00"></div><div class="erro" id="eCusto"></div></div>
+        <div class="entrada"><b>R$</b><input id="custo" inputmode="decimal" autocomplete="off" placeholder="0,00"></div><div class="erro" aria-live="polite" id="eCusto"></div></div>
       <div class="campo"><label for="variaveis">Custos variáveis da venda <small>% do preço</small></label>
         <div class="entrada"><b>%</b><input id="variaveis" inputmode="decimal" autocomplete="off" placeholder="0"></div>
-        <button type="button" class="ajuda" id="detalhar">▸ detalhar (imposto, cartão, comissão…)</button>
+        <button type="button" class="ajuda" id="detalhar" aria-expanded="false" aria-controls="subVar">▸ detalhar (imposto, cartão, comissão…)</button>
         <div class="sub" id="subVar">
           <div class="campo"><label for="imposto">Imposto %</label><div class="entrada"><input id="imposto" inputmode="decimal"></div></div>
           <div class="campo"><label for="cartao">Taxa do cartão %</label><div class="entrada"><input id="cartao" inputmode="decimal"></div></div>
@@ -123,29 +123,29 @@
         </div></div>
       <div class="campo"><label for="fixas">Despesas fixas <small>% do faturamento</small></label>
         <div class="entrada"><b>%</b><input id="fixas" inputmode="decimal" autocomplete="off" placeholder="0"></div>
-        <button type="button" class="ajuda" id="naoSei">▸ não sei esse número</button>
+        <button type="button" class="ajuda" id="naoSei" aria-expanded="false" aria-controls="subFixas">▸ não sei esse número</button>
         <div class="sub" id="subFixas">
           <div class="campo"><label for="despMes">Despesas fixas do mês R$</label><div class="entrada"><input id="despMes" inputmode="decimal" placeholder="aluguel, salários…"></div></div>
           <div class="campo"><label for="fatMes">Faturamento do mês R$</label><div class="entrada"><input id="fatMes" inputmode="decimal"></div></div>
           <p>Despesas fixas ÷ faturamento. Ex.: R$ 15.000 ÷ R$ 50.000 = 30%.</p>
         </div>
-        <div class="erro" id="ePct"></div></div>
+        <div class="erro" aria-live="polite" id="ePct"></div></div>
       <div class="botoes"><button type="submit" class="btn prim" id="calcular">Calcular</button><button type="button" class="btn sec" id="exemplo">Carregar exemplo</button></div>
     </form>
 
     <form id="fCalcular" class="painel" novalidate hidden>
       <div class="campo"><label for="cCusto">Custo do produto <small>por unidade</small></label>
-        <div class="entrada"><b>R$</b><input id="cCusto" inputmode="decimal" autocomplete="off" placeholder="0,00"></div><div class="erro" id="ecCusto"></div></div>
+        <div class="entrada"><b>R$</b><input id="cCusto" inputmode="decimal" autocomplete="off" placeholder="0,00"></div><div class="erro" aria-live="polite" id="ecCusto"></div></div>
       <div class="campo"><label for="cVariaveis">Custos variáveis da venda <small>% do preço</small></label>
         <div class="entrada"><b>%</b><input id="cVariaveis" inputmode="decimal" autocomplete="off" placeholder="0"></div></div>
       <div class="campo"><label for="cFixas">Despesas fixas <small>% do faturamento</small></label>
         <div class="entrada"><b>%</b><input id="cFixas" inputmode="decimal" autocomplete="off" placeholder="0"></div></div>
       <div class="campo"><label for="cLucro">Lucro que você quer <small>% do preço</small></label>
-        <div class="entrada"><b>%</b><input id="cLucro" inputmode="decimal" autocomplete="off" placeholder="0"></div><div class="erro" id="ecPct"></div></div>
+        <div class="entrada"><b>%</b><input id="cLucro" inputmode="decimal" autocomplete="off" placeholder="0"></div><div class="erro" aria-live="polite" id="ecPct"></div></div>
       <div class="botoes"><button type="submit" class="btn prim" id="cCalcular">Calcular preço</button><button type="button" class="btn sec" id="cExemplo">Carregar exemplo</button></div>
     </form>
 
-    <div id="resultado" hidden>
+    <div id="resultado" aria-live="polite" hidden>
       <div id="blocoBarra">
         <div class="rotulo">De cada R$ 100 vendidos</div>
         <div id="barra"><div data-parte="produto"></div><div data-parte="variaveis"></div><div data-parte="estrutura"></div><div data-parte="lucro"></div></div>
