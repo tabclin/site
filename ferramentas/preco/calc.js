@@ -50,3 +50,28 @@ export function pct(n) {
   const r = Math.round(n * 10) / 10
   return r.toLocaleString("pt-BR", { minimumFractionDigits: Number.isInteger(r) ? 0 : 1, maximumFractionDigits: 1 }) + "%"
 }
+
+const vez = (n) => n.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
+/** Frases em português simples para o resultado de `analisar`. tipo: ok | alerta | perigo */
+export function explicarAnalise(r) {
+  if (!r?.ok) return []
+  const m = [r.lucro.reais >= 0
+    ? { tipo: "ok", texto: `De cada R$ 100 vendidos, sobram ${brl(r.lucro.pct)} de lucro.` }
+    : { tipo: "perigo", texto: `De cada R$ 100 vendidos, faltam ${brl(-r.lucro.pct)} para pagar todos os custos.` }]
+  if (r.markup !== null && r.markup >= 100)
+    m.push({ tipo: "alerta", texto: `Seu markup é ${pct(r.markup)}, mas o que sobra de verdade é ${pct(r.lucro.pct)}. Markup olha para o custo; margem olha para o preço.` })
+  if (r.contribuicao.reais < 0)
+    m.push({ tipo: "perigo", texto: "Esse preço não paga nem o produto e os custos da venda. Quanto mais vender, mais perde." })
+  else if (r.lucro.reais < 0)
+    m.push({ tipo: "perigo", texto: `Esse preço dá prejuízo: a venda paga o produto, mas não paga a estrutura. Cada unidade tira ${brl(-r.lucro.reais)} do caixa.` })
+  return m
+}
+
+/** Frases para o resultado de `calcularPreco`. `entrada.lucro` = lucro desejado (%). */
+export function explicarPreco(r, entrada) {
+  if (r?.erro === "impossivel")
+    return [{ tipo: "perigo", texto: `Impossível: custos variáveis + despesas fixas + lucro somam ${pct(r.soma)}. Nenhum preço deixa sobrar mais do que 100% do que você vende. Reduza algum desses percentuais.` }]
+  if (!r?.ok) return []
+  return [{ tipo: "ok", texto: `Para lucrar ${pct(entrada.lucro)}, venda por ${brl(r.preco)}: é o custo multiplicado por ${vez(r.multiplicador)}.` }]
+}
