@@ -2,7 +2,7 @@
 
 /** Lê número no formato brasileiro ("2,50", "1.234,56", "R$ 8", "12%") ou com ponto decimal ("8.5"). */
 export function lerNumero(texto) {
-  let s = String(texto ?? "").replace(/R\$|%|\s/g, "")
+  let s = String(texto ?? "").replace(/R\$|%|\s/gi, "")
   if (!s) return NaN
   if (s.includes(",")) s = s.replace(/\./g, "").replace(",", ".")
   else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, "")

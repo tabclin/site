@@ -4,7 +4,7 @@ import { lerNumero, analisar, calcularPreco, somaDetalhes, fixasPct, brl, pct, e
 const $ = (id) => document.getElementById(id)
 const val = (id) => lerNumero($(id).value)
 const pctVazio0 = (id) => ($(id).value.trim() === "" ? 0 : val(id))
-const fmtCampo = (n) => (Math.round(n * 10) / 10).toLocaleString("pt-BR")
+const fmtCampo = (n) => n.toLocaleString("pt-BR", { maximumFractionDigits: 2, useGrouping: false })
 
 // abas
 function abrir(qual) {
@@ -17,13 +17,20 @@ $("abaAnalisar").onclick = () => abrir("analisar")
 $("abaCalcular").onclick = () => abrir("calcular")
 
 // ajudas
-const alterna = (botao, caixa, txt) => { $(botao).onclick = () => { const a = $(caixa).classList.toggle("aberto"); $(botao).setAttribute("aria-expanded", a); $(botao).textContent = (a ? "▾ " : "▸ ") + txt } }
-alterna("detalhar", "subVar", "detalhar (imposto, cartão, comissão…)")
-alterna("naoSei", "subFixas", "não sei esse número")
-for (const id of ["imposto", "cartao", "comissao", "outros"])
-  $(id).addEventListener("input", () => { $("variaveis").value = fmtCampo(somaDetalhes({ imposto: val("imposto"), cartao: val("cartao"), comissao: val("comissao"), outros: val("outros") })) })
-for (const id of ["despMes", "fatMes"])
-  $(id).addEventListener("input", () => { const f = fixasPct(val("despMes"), val("fatMes")); $("fixas").value = f === null ? "" : fmtCampo(f) })
+// Com a ajuda aberta, o campo total é calculado por ela e fica travado (não pode divergir do detalhe).
+const atualizaVar = () => { $("variaveis").value = fmtCampo(somaDetalhes({ imposto: val("imposto"), cartao: val("cartao"), comissao: val("comissao"), outros: val("outros") })) }
+const atualizaFixas = () => { const f = fixasPct(val("despMes"), val("fatMes")); $("fixas").value = f === null ? "" : fmtCampo(f) }
+const alterna = (botao, caixa, alvo, atualiza, ids, txt) => {
+  $(botao).onclick = () => {
+    const a = $(caixa).classList.toggle("aberto")
+    $(botao).setAttribute("aria-expanded", a); $(botao).textContent = (a ? "▾ " : "▸ ") + txt
+    $(alvo).readOnly = a
+    if (a && ids.some((id) => $(id).value.trim() !== "")) atualiza()
+  }
+  for (const id of ids) $(id).addEventListener("input", atualiza)
+}
+alterna("detalhar", "subVar", "variaveis", atualizaVar, ["imposto", "cartao", "comissao", "outros"], "detalhar (imposto, cartão, comissão…)")
+alterna("naoSei", "subFixas", "fixas", atualizaFixas, ["despMes", "fatMes"], "não sei esse número")
 
 // resultado
 function mostraBarra(b) {

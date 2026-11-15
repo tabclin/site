@@ -44,7 +44,8 @@
   .sub.aberto { display:grid; }
   .sub .campo { margin:0; }
   .sub .campo label { font-size:13px; }
-  .sub .entrada input { font-size:16px; padding:9px 10px 9px 0; }
+  .sub .entrada input { font-size:16px; padding:10px 12px; }
+  .entrada input[readonly] { color:var(--mudo); cursor:default; }
   .sub p { grid-column:1 / -1; font-size:13px; color:var(--mudo); font-weight:600; }
   .erro { color:var(--verm); font-size:13px; font-weight:700; min-height:0; margin-top:4px; }
   .botoes { display:flex; gap:10px; margin-top:6px; flex-wrap:wrap; }
@@ -160,7 +161,7 @@
       <div id="explicacoes"></div>
     </div>
 
-    <div id="aviso100">⚠️ <b>Margem nunca passa de 100%.</b> Se alguém te disse 188% de margem, era markup.</div>
+    <div id="aviso100">⚠️ <b>Margem nunca passa de 100%.</b> Se alguém te disse 200% de margem, era markup.</div>
   </section>
 
   <section class="card proximo">
