@@ -74,7 +74,8 @@
   nav a { color: rgba(255,255,255,.72); font-weight: 600; font-size: 15px; }
   nav a:hover { color: #fff; }
   header .btn { padding: 10px 18px; font-size: 14px; }
-  @media (max-width: 820px) { nav { display: none; } header .btn { margin-left: auto; } }
+  @media (max-width: 820px) { nav { gap: 0; } nav a:not(.nav-ferr) { display: none; } nav a.nav-ferr { color: var(--acento); font-size: 13px; font-weight: 800; padding: 6px 10px; border: 1.5px solid var(--acento); border-radius: 999px; } nav .so-pc { display: none; } header .wrap { gap: 12px; } }
+  @media (max-width: 480px) { header .btn { font-size: 0; gap: 0; padding: 9px; } }
 
   /* abertura */
   .hero { position: relative; overflow: hidden; background: radial-gradient(120% 90% at 80% 0%, #12305c 0%, var(--navy) 60%); color: #fff; padding: 80px 0 90px; }
@@ -182,9 +183,9 @@
       <a href="#metodo">Como trabalhamos</a>
       <a href="#cases">Cases</a>
       <a href="#sobre">Quem sou</a>
-      <a href="ferramentas/preco/">Ferramentas grátis</a>
+      <a class="nav-ferr" href="ferramentas/preco/">Ferramentas<span class="so-pc"> grátis</span></a>
     </nav>
-    <a class="btn btn-wpp js-wpp" href="#"><svg><use href="#i-wpp"/></svg>Diagnóstico gratuito</a>
+    <a class="btn btn-wpp js-wpp" href="#" aria-label="Diagnóstico gratuito pelo WhatsApp"><svg><use href="#i-wpp"/></svg>Diagnóstico gratuito</a>
   </div>
 </header>
 
